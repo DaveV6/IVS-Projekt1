@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -O0 -fprofile-arcs -ftest-coverage CMakeFiles/white_box_test.dir/white_box_tests.cpp.o CMakeFiles/white_box_test.dir/white_box_code.cpp.o -o white_box_test  lib/libgtest_main.a lib/libgmock_main.a lib/libgmock.a lib/libgtest.a 

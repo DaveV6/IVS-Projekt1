@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -O0 -fprofile-arcs -ftest-coverage CMakeFiles/tdd_test.dir/tdd_code.cpp.o CMakeFiles/tdd_test.dir/tdd_tests.cpp.o -o tdd_test  lib/libgtest_main.a lib/libgmock_main.a lib/libgmock.a lib/libgtest.a 
