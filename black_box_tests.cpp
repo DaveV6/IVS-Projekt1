@@ -119,15 +119,58 @@ TEST_F(NonEmptyTree, findMultipleNodes) {
 
 }
 
-TEST_F(TreeAxioms, blackLeafNodes) {
+TEST_F(TreeAxioms, Axiom1) {
 
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
-    for (auto node: leafNodes) {
+    for(auto node: leafNodes) {
         EXPECT_EQ(node->color, BLACK);
     }
 
 }
 
+TEST_F(TreeAxioms, Axiom2) {
+
+    std::vector<Node_t*> leafNodes;
+    tree.GetNonLeafNodes(leafNodes);
+
+    for(auto node: leafNodes) {
+        if(node->color == RED) {
+            EXPECT_EQ(node->pLeft->color, BLACK);
+            EXPECT_EQ(node->pRight->color, BLACK);
+        }
+    }
+}
+
+TEST_F(TreeAxioms, Axiom3) {
+    auto root = tree.GetRoot();
+    size_t blackNodeCount;
+    std::vector<size_t> leafBlackNodes;
+    std::vector<Node_t*> leafNodes;
+    tree.GetLeafNodes(leafNodes);
+
+    for (auto node: leafNodes) {
+        while (node != root) {
+            
+            blackNodeCount = 0;
+            node = node->pParent;
+
+            if (node->color == BLACK) {
+                blackNodeCount++;
+            }
+        }
+        
+        leafBlackNodes.push_back(blackNodeCount);
+    }
+
+    blackNodeCount = leafBlackNodes[0];
+    
+    for (auto leafNodeVal: leafBlackNodes)
+    {
+        EXPECT_EQ(blackNodeCount, leafNodeVal);
+        blackNodeCount = leafNodeVal;
+    }
+
+}
 /*** Konec souboru black_box_tests.cpp ***/
