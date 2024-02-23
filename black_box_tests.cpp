@@ -13,8 +13,6 @@
  * @brief Implementace testu binarniho stromu.
  */
 
-#include <stdlib.h>
-
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -47,7 +45,7 @@ class NonEmptyTree: public testing::Test {
         
         std::vector<int> keys = {2,1,5};
         std::vector<std::pair<bool,Node_t*>> newNodes;
-        tree.InsertNodes(keys,newNodes);
+        tree.InsertNodes(keys, newNodes);
     
     }
 
@@ -97,7 +95,7 @@ TEST_F(EmptyTree, findNode) {
 
 TEST_F(NonEmptyTree, insertMultipleNodes) {
 
-    auto insertX = tree.InsertNode(5);
+    auto insertX = tree.InsertNode(2);
     EXPECT_FALSE(insertX.first);
 
     auto insertY = tree.InsertNode(100);
@@ -107,14 +105,14 @@ TEST_F(NonEmptyTree, insertMultipleNodes) {
 
 TEST_F(NonEmptyTree, deleteMultipleNodes) {
 
-    EXPECT_TRUE(tree.DeleteNode(5));
+    EXPECT_TRUE(tree.DeleteNode(2));
     EXPECT_FALSE(tree.DeleteNode(100));
 
 }
 
 TEST_F(NonEmptyTree, findMultipleNodes) {
     
-    EXPECT_TRUE(tree.FindNode(1));
+    EXPECT_TRUE(tree.FindNode(2));
     EXPECT_FALSE(tree.FindNode(100));
 
 }
@@ -141,22 +139,24 @@ TEST_F(TreeAxioms, Axiom2) {
             EXPECT_EQ(node->pRight->color, BLACK);
         }
     }
+
 }
 
 TEST_F(TreeAxioms, Axiom3) {
+
     auto root = tree.GetRoot();
-    size_t blackNodeCount;
     std::vector<size_t> leafBlackNodes;
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
-    for (auto node: leafNodes) {
-        while (node != root) {
-            
-            blackNodeCount = 0;
-            node = node->pParent;
+    for (auto i = leafNodes.begin(); i != leafNodes.end(); ++i) {
+        auto node = *i;
+        size_t blackNodeCount = 0;
+        auto tempNode = node;
 
-            if (node->color == BLACK) {
+        while (tempNode != root) {
+            tempNode = tempNode->pParent;
+            if (tempNode->color == BLACK) {
                 blackNodeCount++;
             }
         }
@@ -164,13 +164,13 @@ TEST_F(TreeAxioms, Axiom3) {
         leafBlackNodes.push_back(blackNodeCount);
     }
 
-    blackNodeCount = leafBlackNodes[0];
+    size_t blackNodeCount = leafBlackNodes[0];
     
-    for (auto leafNodeVal: leafBlackNodes)
-    {
-        EXPECT_EQ(blackNodeCount, leafNodeVal);
-        blackNodeCount = leafNodeVal;
+    for (auto i = leafBlackNodes.begin(); i != leafBlackNodes.end(); ++i) {
+        EXPECT_EQ(blackNodeCount, *i);
+        blackNodeCount = *i;
     }
-
+    
 }
+
 /*** Konec souboru black_box_tests.cpp ***/
