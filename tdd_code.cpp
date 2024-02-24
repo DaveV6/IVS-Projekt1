@@ -25,15 +25,21 @@ Graph::Graph() {
 }
 
 Graph::~Graph() {
+
     clear();
+
 }
 
 std::vector<Node*> Graph::nodes() {
+
     return graphNodes;
+
 }
 
 std::vector<Edge> Graph::edges() const {
+
     return graphEdges;
+
 }
 
 Node* Graph::addNode(size_t nodeId) {
@@ -143,7 +149,7 @@ void Graph::removeNode(size_t nodeId) {
         delete *nodeIt;
         graphNodes.erase(nodeIt);
     } else {
-        throw std::out_of_range("Node doesn't exist!\n");
+        throw std::out_of_range("Node does not exist!\n");
     }
 }
 
@@ -154,28 +160,91 @@ void Graph::removeEdge(const Edge& edge) {
     if (i != graphEdges.end()) {
         graphEdges.erase(i);
     } else {
-        throw std::out_of_range("Edge doesn't exist!\n");
+        throw std::out_of_range("Edge does not exist!\n");
     }
 
 }
 
 size_t Graph::nodeCount() const{
+
     return graphNodes.size();
+
 }
 
 size_t Graph::edgeCount() const{
+
     return graphEdges.size();
+
 }
 
 size_t Graph::nodeDegree(size_t nodeId) const{
-    return 42;
+
+    if (std::find_if(graphNodes.begin(), graphNodes.end(), 
+        [nodeId](const Node* node) { return node->id == nodeId; }) == graphNodes.end()) {
+        throw std::out_of_range("Node doesn't exist!\n");
+    }
+
+    size_t degree = 0;
+    for (auto node : graphNodes) {
+        
+        if (containsEdge({nodeId, node->id})) {
+
+            degree++;
+        
+        }
+    
+    }
+
+    return degree;
+
 }
 
 size_t Graph::graphDegree() const{
-    return 42;
+    
+    size_t maxDegree = 0;
+
+    for(auto node : graphNodes) {
+
+        size_t currentDegree = nodeDegree(node->id);
+        if(currentDegree > maxDegree) {
+
+            maxDegree = currentDegree;
+        
+        }
+    
+    }
+
+    return maxDegree;
+
 }
 
-void Graph::coloring(){
+void Graph::coloring() {
+
+    for(auto node : graphNodes) {
+        node->color = -1;
+    }
+
+    std::vector<size_t> colors;
+    for(size_t i = 1; i <= graphDegree() + 1; ++i) {
+        colors.push_back(i);
+    }
+
+    for(auto nodeI : graphNodes) {
+        std::vector<size_t> tempColors = colors;
+
+        for(auto nodeJ : graphNodes) {
+            if(containsEdge({nodeI->id, nodeJ->id})) {
+                auto i = std::find(tempColors.begin(), tempColors.end(), nodeJ->color);
+                if(i != tempColors.end()) {
+                    tempColors.erase(i);
+                }
+            }
+        }
+        
+        nodeI->color = tempColors[0];
+
+    }
+
 }
 
 void Graph::clear() {
