@@ -24,6 +24,8 @@
 
 // Místo pro Vaše případné includy, používejte pouze standardní knihovnu tak, aby nebylo nutno upravovat CMake.
 
+#include <algorithm>
+
 /**
  * @brief reprezentace uzlu
  */

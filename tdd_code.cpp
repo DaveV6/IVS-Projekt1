@@ -17,9 +17,14 @@
 #include "tdd_code.h"
 
 
-Graph::Graph(){}
+Graph::Graph() {
 
-Graph::~Graph(){
+    graphNodes.clear();
+    graphEdges.clear();
+
+}
+
+Graph::~Graph() {
     clear();
 }
 
@@ -27,7 +32,7 @@ std::vector<Node*> Graph::nodes() {
     return graphNodes;
 }
 
-std::vector<Edge> Graph::edges() const{
+std::vector<Edge> Graph::edges() const {
     return graphEdges;
 }
 
@@ -90,21 +95,22 @@ void Graph::addMultipleEdges(const std::vector<Edge>& edges) {
 
 }
 
-Node* Graph::getNode(size_t nodeId){
+Node* Graph::getNode(size_t nodeId) {
 
-    for(auto node : graphNodes) { 
-  
-        if(node->id != nodeId) {
+    for (auto node : graphNodes) {
+
+        if (node->id == nodeId) {
             return node;
         }
-  
-    }
-
-    return nullptr;
     
+    }
+    
+    return nullptr;
+
 }
 
-bool Graph::containsEdge(const Edge& edge) const{
+
+bool Graph::containsEdge(const Edge& edge) const {
 
     for(auto graphEdge : graphEdges) {
 
@@ -120,10 +126,37 @@ bool Graph::containsEdge(const Edge& edge) const{
 
 }
 
-void Graph::removeNode(size_t nodeId){
+void Graph::removeNode(size_t nodeId) {
+    
+    auto i = std::remove_if(graphEdges.begin(), graphEdges.end(), 
+        [nodeId](const Edge& edge) { 
+            return edge.a == nodeId || edge.b == nodeId; 
+        });
+    graphEdges.erase(i, graphEdges.end());
+
+    auto nodeIt = std::find_if(graphNodes.begin(), graphNodes.end(), 
+        [nodeId](const Node* node) { 
+            return node->id == nodeId; 
+        });
+
+    if (nodeIt != graphNodes.end()) {
+        delete *nodeIt;
+        graphNodes.erase(nodeIt);
+    } else {
+        throw std::out_of_range("Node doesn't exist!\n");
+    }
 }
 
-void Graph::removeEdge(const Edge& edge){
+void Graph::removeEdge(const Edge& edge) {
+
+    auto i = std::find(graphEdges.begin(), graphEdges.end(), edge);
+   
+    if (i != graphEdges.end()) {
+        graphEdges.erase(i);
+    } else {
+        throw std::out_of_range("Edge doesn't exist!\n");
+    }
+
 }
 
 size_t Graph::nodeCount() const{
