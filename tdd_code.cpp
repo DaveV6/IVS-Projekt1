@@ -40,7 +40,7 @@ Node* Graph::addNode(size_t nodeId) {
         }
     }
 
-    Node *newNode = (Node*)malloc(sizeof(Node));
+    Node *newNode = new Node;
     if (newNode != nullptr) {
         newNode->id = nodeId;
         graphNodes.push_back(newNode);
@@ -132,7 +132,7 @@ size_t Graph::edgeCount() const{
 size_t Graph::nodeDegree(size_t nodeId) const {
     if (std::find_if(graphNodes.begin(), graphNodes.end(), 
         [nodeId](const Node* node) { return node->id == nodeId; }) == graphNodes.end()) {
-        throw std::out_of_range("Node doesn't exist!\n");
+        throw std::out_of_range("Node does not exist!\n");
     }
 
     size_t degree = 0;
@@ -164,7 +164,7 @@ void Graph::coloring() {
     }
 
     std::vector<size_t> colors;
-    for(size_t i = 1; i <= graphDegree() + 1; ++i) {
+    for(size_t i = 1; i <= graphDegree() + 1; i++) {
         colors.push_back(i);
     }
 
