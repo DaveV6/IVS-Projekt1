@@ -33,126 +33,90 @@
 //      *STEJNY* pocet cernych uzlu.
 //============================================================================//
 
-class EmptyTree: public testing::Test {
-    
+class TreeTesting : public testing::Test {
 protected:
     BinaryTree tree;
 };
 
-class NonEmptyTree: public testing::Test {
+class EmptyTree : public TreeTesting {};
 
+class NonEmptyTree : public TreeTesting {
+public:
     void SetUp() override {
-        
-        std::vector<int> keys = {2,1,5};
-        std::vector<std::pair<bool,Node_t*>> newNodes;
+        std::vector<int> keys = {2, 1, 5};
+        std::vector<std::pair<bool, Node_t*>> newNodes;
         tree.InsertNodes(keys, newNodes);
-    
     }
-
-protected:
-    BinaryTree tree;
 };
 
-class TreeAxioms: public testing::Test {
-    
+class TreeAxioms : public TreeTesting {
+public:
     void SetUp() override {
-        
         tree.InsertNode(2);
         tree.InsertNode(1);
         tree.InsertNode(5);
-
-        tree.FindNode(2)->color = BLACK;
-        tree.FindNode(1)->color = RED;
-        tree.FindNode(5)->color = RED;
-
     }
-
-protected:
-    BinaryTree tree;
 };
 
-TEST_F(EmptyTree, insertNode) {
-    
-    auto node = tree.InsertNode(2);
-    EXPECT_TRUE(node.first);
 
-    node = tree.InsertNode(2);
-    EXPECT_FALSE(node.first);
-
+TEST_F(EmptyTree, InsertNode) {
+    EXPECT_TRUE(tree.InsertNode(2).first);
+    EXPECT_FALSE(tree.InsertNode(2).first);
 }
 
-TEST_F(EmptyTree, deleteNode) {
-
+TEST_F(EmptyTree, DeleteNode) {
     EXPECT_FALSE(tree.DeleteNode(2));
-
 }
 
-TEST_F(EmptyTree, findNode) {
-
+TEST_F(EmptyTree, FindNode) {
     EXPECT_FALSE(tree.FindNode(2));
-
 }
 
-TEST_F(NonEmptyTree, insertMultipleNodes) {
-
-    auto insertX = tree.InsertNode(2);
-    EXPECT_FALSE(insertX.first);
-
-    auto insertY = tree.InsertNode(100);
-    EXPECT_TRUE(insertY.first);
-
+TEST_F(NonEmptyTree, InsertMultipleNodes) {
+    EXPECT_FALSE(tree.InsertNode(2).first);
+    EXPECT_TRUE(tree.InsertNode(100).first);
 }
 
-TEST_F(NonEmptyTree, deleteMultipleNodes) {
-
+TEST_F(NonEmptyTree, DeleteMultipleNodes) {
     EXPECT_TRUE(tree.DeleteNode(2));
     EXPECT_FALSE(tree.DeleteNode(100));
-
 }
 
-TEST_F(NonEmptyTree, findMultipleNodes) {
-    
+TEST_F(NonEmptyTree, FindMultipleNodes) {
     EXPECT_TRUE(tree.FindNode(2));
     EXPECT_FALSE(tree.FindNode(100));
-
 }
 
 TEST_F(TreeAxioms, Axiom1) {
-
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
-    for(auto node: leafNodes) {
+    for (auto node : leafNodes) {
         EXPECT_EQ(node->color, BLACK);
     }
-
 }
 
 TEST_F(TreeAxioms, Axiom2) {
-
     std::vector<Node_t*> leafNodes;
     tree.GetNonLeafNodes(leafNodes);
 
-    for(auto node: leafNodes) {
-        if(node->color == RED) {
+    for (auto node : leafNodes) {
+        if (node->color == RED) {
             EXPECT_EQ(node->pLeft->color, BLACK);
             EXPECT_EQ(node->pRight->color, BLACK);
         }
     }
-
 }
 
 TEST_F(TreeAxioms, Axiom3) {
-
     auto root = tree.GetRoot();
-    std::vector<size_t> leafBlackNodes;
+    std::vector<size_t> leafBlackDepths;
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
-    for (auto i = leafNodes.begin(); i != leafNodes.end(); ++i) {
-        auto node = *i;
+    for (auto leafNode : leafNodes) {
         size_t blackNodeCount = 0;
-        auto tempNode = node;
+        auto tempNode = leafNode;
 
         while (tempNode != root) {
             tempNode = tempNode->pParent;
@@ -160,17 +124,16 @@ TEST_F(TreeAxioms, Axiom3) {
                 blackNodeCount++;
             }
         }
-        
-        leafBlackNodes.push_back(blackNodeCount);
+
+        leafBlackDepths.push_back(blackNodeCount);
     }
 
-    size_t blackNodeCount = leafBlackNodes[0];
-    
-    for (auto i = leafBlackNodes.begin(); i != leafBlackNodes.end(); ++i) {
-        EXPECT_EQ(blackNodeCount, *i);
-        blackNodeCount = *i;
+    size_t blackDepth = leafBlackDepths[0];
+
+    for (size_t depth : leafBlackDepths) {
+        EXPECT_EQ(blackDepth, depth);
+        blackDepth = depth;
     }
-    
 }
 
 /*** Konec souboru black_box_tests.cpp ***/
