@@ -204,6 +204,8 @@ public:
 
 protected:
     // doplňte vhodné struktury
+    std::vector<Node*> graphNodes; 
+    std::vector<Edge> graphEdges;
 
 };
 
