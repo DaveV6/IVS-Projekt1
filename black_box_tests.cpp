@@ -100,11 +100,11 @@ TEST_F(TreeAxioms, Axiom1) {
 }
 
 TEST_F(TreeAxioms, Axiom2) {
-    std::vector<Node_t*> leafNodes;
-    tree.GetNonLeafNodes(leafNodes);
+    std::vector<Node_t*> nonLeafNodes;
+    tree.GetNonLeafNodes(nonLeafNodes);
 
-    // iterates through leaf nodes and if they are black, their children should be red
-    for (auto node : leafNodes) {
+    // iterates through nodes and if they are red, their children should be black
+    for (auto node : nonLeafNodes) {
         if (node->color == RED) {
             EXPECT_EQ(node->pLeft->color, BLACK);
             EXPECT_EQ(node->pRight->color, BLACK);
