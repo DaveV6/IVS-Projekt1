@@ -42,6 +42,7 @@ class EmptyTree : public TreeTesting {};
 
 class NonEmptyTree : public TreeTesting {
 public:
+    // set up function to initialize a non empty tree with nodes from the assignment
     void SetUp() override {
         std::vector<int> keys = {2, 1, 5};
         std::vector<std::pair<bool, Node_t*>> newNodes;
@@ -51,6 +52,7 @@ public:
 
 class TreeAxioms : public TreeTesting {
 public:
+    // set up function to initialize a tree structure from the assignment
     void SetUp() override {
         tree.InsertNode(2);
         tree.InsertNode(1);
@@ -91,6 +93,7 @@ TEST_F(TreeAxioms, Axiom1) {
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
+    // iterates through leaf nodes and expects them to be black
     for (auto node : leafNodes) {
         EXPECT_EQ(node->color, BLACK);
     }
@@ -100,6 +103,7 @@ TEST_F(TreeAxioms, Axiom2) {
     std::vector<Node_t*> leafNodes;
     tree.GetNonLeafNodes(leafNodes);
 
+    // iterates through leaf nodes and if they are black, their children should be red
     for (auto node : leafNodes) {
         if (node->color == RED) {
             EXPECT_EQ(node->pLeft->color, BLACK);
@@ -114,10 +118,12 @@ TEST_F(TreeAxioms, Axiom3) {
     std::vector<Node_t*> leafNodes;
     tree.GetLeafNodes(leafNodes);
 
+    // iterates through all leaf nodes and calculates the amount of black nodes in the path to the root
     for (auto leafNode : leafNodes) {
         size_t blackNodeCount = 0;
         auto tempNode = leafNode;
 
+        // counts all the black nodes from node to root
         while (tempNode != root) {
             tempNode = tempNode->pParent;
             if (tempNode->color == BLACK) {
@@ -125,12 +131,16 @@ TEST_F(TreeAxioms, Axiom3) {
             }
         }
 
+        // stores the number of black nodes from leaf node to root
         leafBlackDepths.push_back(blackNodeCount);
     }
 
+    // initial reference, takes the first leaf node black node count
     size_t blackDepth = leafBlackDepths[0];
 
+    // iterates through all black node counts and compares with initial reference
     for (size_t depth : leafBlackDepths) {
+        // expects all paths to have the same amount of black node as the initial reference
         EXPECT_EQ(blackDepth, depth);
         blackDepth = depth;
     }

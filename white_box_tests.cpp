@@ -34,19 +34,24 @@
 
 class HashMapTests : public testing::Test {
 protected:
-    hash_map_t *map;
+    // pointer to hash map
+    hash_map_t *map; 
 
+    // set up function for empty hash map
     void SetUpEmpty() {
         map = hash_map_ctor();
     }
 
+    // set up function for non empty map
     void SetUpNonEmpty() {
         map = hash_map_ctor();
+        // key-value pairs from the assignment
         hash_map_put(map, "exotic", 42);
         hash_map_put(map, "commission", 9999);
         hash_map_put(map, "Ruzovy ponik", 85);
     }
 
+    // clean up function
     void TearDown() override {
         hash_map_dtor(map);
     }
