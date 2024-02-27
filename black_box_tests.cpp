@@ -17,7 +17,7 @@
 
 #include "gtest/gtest.h"
 
-#include "libs/red_black_tree.h"
+#include "red_black_tree.h"
 
 //============================================================================//
 // ** ZDE DOPLNTE TESTY **
