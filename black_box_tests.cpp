@@ -74,17 +74,17 @@ TEST_F(EmptyTree, FindNode) {
     EXPECT_FALSE(tree.FindNode(2));
 }
 
-TEST_F(NonEmptyTree, InsertMultipleNodes) {
+TEST_F(NonEmptyTree, InsertNode) {
     EXPECT_FALSE(tree.InsertNode(2).first);
     EXPECT_TRUE(tree.InsertNode(100).first);
 }
 
-TEST_F(NonEmptyTree, DeleteMultipleNodes) {
+TEST_F(NonEmptyTree, DeleteNode) {
     EXPECT_TRUE(tree.DeleteNode(2));
     EXPECT_FALSE(tree.DeleteNode(100));
 }
 
-TEST_F(NonEmptyTree, FindMultipleNodes) {
+TEST_F(NonEmptyTree, FindNode) {
     EXPECT_TRUE(tree.FindNode(2));
     EXPECT_FALSE(tree.FindNode(100));
 }
