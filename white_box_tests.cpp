@@ -49,6 +49,9 @@ protected:
         hash_map_put(map, "exotic", 42);
         hash_map_put(map, "commission", 9999);
         hash_map_put(map, "Ruzovy ponik", 85);
+        // additional key-value pairs for testing
+        hash_map_put(map, "ivs test", 100);
+        hash_map_put(map, "jazyk C", 1);
     }
 
     // clean up function
@@ -69,6 +72,7 @@ TEST_F(HashMapTests, ClearEmptyMap) {
 TEST_F(HashMapTests, ReserveOnEmptyMap) {
     SetUpEmpty();
     ASSERT_NE(hash_map_reserve(map, 69), MEMORY_ERROR);
+    EXPECT_EQ(hash_map_reserve(map, -69), MEMORY_ERROR);
     EXPECT_EQ(hash_map_reserve(map, 69), OK);
 }
 
@@ -134,17 +138,20 @@ TEST_F(HashMapTests, ReserveOnNonEmptyMap) {
 
 TEST_F(HashMapTests, SizeOfNonEmptyMap) {
     SetUpNonEmpty();
-    EXPECT_EQ(hash_map_size(map), 3);
+    EXPECT_EQ(hash_map_size(map), 5);
 }
 
 TEST_F(HashMapTests, CapacityofNonEmptyMap) {
     SetUpNonEmpty();
     EXPECT_EQ(hash_map_capacity(map), HASH_MAP_INIT_SIZE);
+    hash_map_put(map, "white box testing!", 111);
+    hash_map_put(map, "random string!!", 11);
+    EXPECT_EQ(hash_map_capacity(map), HASH_MAP_INIT_SIZE * 2);
 }
 
 TEST_F(HashMapTests, ContainsStringInNonEmptyMap) {
     SetUpNonEmpty();
-    EXPECT_EQ(hash_map_contains(map, "key"), 0);
+    EXPECT_EQ(hash_map_contains(map, "testing"), 0);
     EXPECT_EQ(hash_map_contains(map, "Ruzovy ponik"), 1);
 }
 
@@ -153,7 +160,7 @@ TEST_F(HashMapTests, InsertIntoNonEmptyMap) {
     ASSERT_EQ(hash_map_contains(map, "Ruzovy ponik"), 1);
     ASSERT_NE(hash_map_put(map, "Ruzovy ponik", 85), MEMORY_ERROR);
     EXPECT_EQ(hash_map_put(map, "Ruzovy ponik", 85), KEY_ALREADY_EXISTS);
-    EXPECT_EQ(hash_map_put(map, "key", 10), OK);
+    EXPECT_EQ(hash_map_put(map, "YOU SHALL NOT PASS", 1984), OK);
 }
 
 TEST_F(HashMapTests, GetFromNonEmptyMap) {
